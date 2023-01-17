@@ -60,7 +60,7 @@ sections.forEach(function(section) {
 ul.append(fragment)
 
 // Add class 'active' to section when near top of viewport
-let observer = new IntersectionObserver(function(entries){
+const callback = function(entries){
     let section = entries[0]
     console.log(section.isIntersecting)
     section.target.classList.remove('your-active-class')
@@ -68,20 +68,23 @@ let observer = new IntersectionObserver(function(entries){
         section.target.classList.add('your-active-class')
         const menuLinks = document.querySelectorAll('.menu__link')
         menuLinks.forEach(link=>{
-            link.classList.remove('active')
             if(link.textContent === section.target.dataset.nav){
                 console.log(link)
                 link.classList.add('active')
+            }else{
+                link.classList.remove('active')
             }
         })
     }else{
         section.target.classList.remove('your-active-class')
     }
-} , {
+}
+const options={
     root:null,
     rootMargin:"0px",
     threshold:0.5
-})
+}
+let observer = new IntersectionObserver(callback , options )
 window.addEventListener('scroll',()=>{
     sections.forEach( section => {
         observer.observe(section)
